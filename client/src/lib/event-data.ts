@@ -1,9 +1,6 @@
-import type { Express } from "express";
-import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import type { EventDetails, Participant, FAQItem, TransportTip } from "@shared/schema";
 
-// Event data for the debut
-const eventDetails = {
+export const eventDetails: EventDetails = {
   debutanteName: "Maria Isabella",
   eventDate: "2025-03-15",
   eventTime: "6:00 PM",
@@ -15,7 +12,7 @@ const eventDetails = {
   dressCodeDetails: "Ladies are encouraged to wear elegant gowns or cocktail dresses. Gentlemen should wear suits or barong tagalog. The color palette for the evening is burgundy, gold, and champagne. Please avoid wearing white as it is reserved for the debutante.",
 };
 
-const treasures = [
+export const treasures: Participant[] = [
   { id: 1, name: "Grandmother Elena", role: "Wisdom" },
   { id: 2, name: "Grandfather Jose", role: "Strength" },
   { id: 3, name: "Aunt Patricia", role: "Grace" },
@@ -36,7 +33,7 @@ const treasures = [
   { id: 18, name: "Mother Rosario", role: "Unconditional Love" },
 ];
 
-const roses = [
+export const roses: Participant[] = [
   { id: 1, name: "Father Ricardo" },
   { id: 2, name: "Brother Gabriel" },
   { id: 3, name: "Grandfather Jose" },
@@ -57,7 +54,7 @@ const roses = [
   { id: 18, name: "Special Someone David" },
 ];
 
-const candles = [
+export const candles: Participant[] = [
   { id: 1, name: "Mother Rosario" },
   { id: 2, name: "Sister Sofia" },
   { id: 3, name: "Grandmother Elena" },
@@ -78,7 +75,7 @@ const candles = [
   { id: 18, name: "Special Friend Olivia" },
 ];
 
-const faqItems = [
+export const faqItems: FAQItem[] = [
   {
     id: 1,
     question: "What time should I arrive?",
@@ -116,7 +113,7 @@ const faqItems = [
   },
 ];
 
-const transportTips = [
+export const transportTips: TransportTip[] = [
   {
     id: 1,
     mode: "By Car",
@@ -136,40 +133,3 @@ const transportTips = [
     description: "Simply input 'The Grand Ballroom, 123 Celebration Avenue, Makati City' in your app. The venue is well-known to most drivers in the area.",
   },
 ];
-
-export async function registerRoutes(
-  httpServer: Server,
-  app: Express
-): Promise<Server> {
-  // Get event details
-  app.get("/api/event", (_req, res) => {
-    res.json(eventDetails);
-  });
-
-  // Get traditions (treasures, roses, candles)
-  app.get("/api/traditions", (_req, res) => {
-    res.json({ treasures, roses, candles });
-  });
-
-  // Get FAQ items
-  app.get("/api/faq", (_req, res) => {
-    res.json(faqItems);
-  });
-
-  // Get transportation tips
-  app.get("/api/transport", (_req, res) => {
-    res.json(transportTips);
-  });
-
-  // Get all data in one call
-  app.get("/api/debut-data", (_req, res) => {
-    res.json({
-      event: eventDetails,
-      traditions: { treasures, roses, candles },
-      faq: faqItems,
-      transport: transportTips,
-    });
-  });
-
-  return httpServer;
-}
