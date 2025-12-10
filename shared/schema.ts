@@ -68,3 +68,24 @@ export const transportTipSchema = z.object({
 });
 
 export type TransportTip = z.infer<typeof transportTipSchema>;
+
+// RSVP Schema
+export const rsvps = pgTable("rsvps", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  guestName: text("guest_name").notNull(),
+  email: text("email").notNull(),
+  attending: text("attending").notNull(),
+  guestCount: integer("guest_count").notNull().default(1),
+  mealPreference: text("meal_preference"),
+  dietaryRestrictions: text("dietary_restrictions"),
+  message: text("message"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertRsvpSchema = createInsertSchema(rsvps).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertRsvp = z.infer<typeof insertRsvpSchema>;
+export type Rsvp = typeof rsvps.$inferSelect;

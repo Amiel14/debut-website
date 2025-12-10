@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { CountdownTimer } from "@/components/countdown-timer";
+import { RsvpForm } from "@/components/rsvp-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,13 @@ import { Calendar, Clock, MapPin, Sparkles, Heart, Flame, Gift, Car, Bus, Naviga
 import { HeroSkeleton, EventDetailsSkeleton, TraditionsSkeleton, FAQSkeleton } from "@/components/skeleton-sections";
 import type { EventDetails, Participant, FAQItem, TransportTip } from "@shared/schema";
 import heroImage from "@assets/stock_images/elegant_debut_party__e4c843c4.jpg";
+
+interface ProgramItem {
+  id: number;
+  time: string;
+  title: string;
+  description: string;
+}
 
 interface DebutData {
   event: EventDetails;
@@ -17,6 +25,7 @@ interface DebutData {
   };
   faq: FAQItem[];
   transport: TransportTip[];
+  program: ProgramItem[];
 }
 
 export default function Home() {
@@ -71,11 +80,13 @@ export default function Home() {
               dressCode={data.event.dressCode}
               dressCodeDetails={data.event.dressCodeDetails}
             />
+            <ProgramSection program={data.program} />
             <TraditionsSection 
               treasures={data.traditions.treasures} 
               roses={data.traditions.roses} 
               candles={data.traditions.candles} 
             />
+            <RsvpForm />
             <DirectionsSection tips={data.transport} />
             <FAQSection items={data.faq} />
             <Footer debutanteName={data.event.debutanteName} />
@@ -240,10 +251,15 @@ function ThemeSection({
             </p>
           </div>
           
-          <div className="flex justify-center gap-3 pt-4 flex-wrap">
-            <ColorSwatch color="bg-red-900" label="Burgundy" />
-            <ColorSwatch color="bg-amber-500" label="Gold" />
-            <ColorSwatch color="bg-amber-100" label="Champagne" />
+          <div className="pt-4">
+            <Card className="inline-block">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-primary border-2 border-primary-foreground flex items-center justify-center">
+                  <span className="text-primary-foreground text-lg font-bold">X</span>
+                </div>
+                <span className="text-sm font-medium">Red is reserved for the debutante</span>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
@@ -251,12 +267,45 @@ function ThemeSection({
   );
 }
 
-function ColorSwatch({ color, label }: { color: string; label: string }) {
+function ProgramSection({ program }: { program: ProgramItem[] }) {
   return (
-    <div className="flex items-center gap-2">
-      <div className={`w-6 h-6 rounded-full ${color} border border-border`} />
-      <span className="text-sm text-muted-foreground">{label}</span>
-    </div>
+    <section className="py-16 md:py-20 bg-card" data-testid="program-section">
+      <div className="container mx-auto px-4">
+        <SectionHeading title="Program" subtitle="Evening Schedule" />
+        
+        <div className="max-w-3xl mx-auto mt-12">
+          <div className="relative">
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-px" />
+            
+            <div className="space-y-8">
+              {program.map((item, index) => (
+                <div 
+                  key={item.id} 
+                  className={`relative flex items-start gap-4 md:gap-8 ${
+                    index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                  }`}
+                  data-testid={`program-item-${item.id}`}
+                >
+                  <div className={`hidden md:block flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
+                    <span className="text-sm font-medium text-primary">{item.time}</span>
+                  </div>
+                  
+                  <div className="relative z-10 w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+                    <div className="w-3 h-3 rounded-full bg-primary-foreground" />
+                  </div>
+                  
+                  <div className={`flex-1 pb-2 ${index % 2 === 0 ? 'md:text-left' : 'md:text-right'}`}>
+                    <span className="text-sm font-medium text-primary md:hidden">{item.time}</span>
+                    <h4 className="font-serif text-lg font-semibold text-foreground">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

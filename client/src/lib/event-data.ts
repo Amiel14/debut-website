@@ -2,14 +2,14 @@ import type { EventDetails, Participant, FAQItem, TransportTip } from "@shared/s
 
 export const eventDetails: EventDetails = {
   debutanteName: "Maria Isabella",
-  eventDate: "2025-03-15",
+  eventDate: "2025-12-29",
   eventTime: "6:00 PM",
   venueName: "The Grand Ballroom",
   venueAddress: "123 Celebration Avenue, Makati City, Metro Manila, Philippines 1200",
   mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.802259253319!2d121.01460657580858!3d14.554729185953898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90264a0ed01%3A0x2b066ed57830cace!2sMakati%20City%2C%20Metro%20Manila%2C%20Philippines!5e0!3m2!1sen!2sus!4v1702000000000!5m2!1sen!2sus",
-  theme: "A Night Under the Stars",
+  theme: "An Elegant Evening",
   dressCode: "Formal / Semi-Formal Attire",
-  dressCodeDetails: "Ladies are encouraged to wear elegant gowns or cocktail dresses. Gentlemen should wear suits or barong tagalog. The color palette for the evening is burgundy, gold, and champagne. Please avoid wearing white as it is reserved for the debutante.",
+  dressCodeDetails: "Ladies are encouraged to wear elegant gowns or cocktail dresses. Gentlemen should wear suits or barong tagalog. You may wear any color of your choice, EXCEPT RED. Red is reserved exclusively for the debutante.",
 };
 
 export const treasures: Participant[] = [
