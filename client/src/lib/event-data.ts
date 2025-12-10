@@ -2,7 +2,7 @@ import type { EventDetails, Participant, FAQItem, TransportTip } from "@shared/s
 
 export const eventDetails: EventDetails = {
   debutanteName: "Maria Isabella",
-  eventDate: "2025-12-29",
+  eventDate: "2025-12-30",
   eventTime: "6:00 PM",
   venueName: "The Grand Ballroom",
   venueAddress: "123 Celebration Avenue, Makati City, Metro Manila, Philippines 1200",
@@ -73,6 +73,27 @@ export const candles: Participant[] = [
   { id: 16, name: "Cousin Isabel" },
   { id: 17, name: "Mentor Teacher Ms. Reyes" },
   { id: 18, name: "Special Friend Olivia" },
+];
+
+export const bills: Participant[] = [
+  { id: 1, name: "Aunt Lisa" },
+  { id: 2, name: "Uncle Michael" },
+  { id: 3, name: "Family Friend Tita Grace" },
+  { id: 4, name: "Family Friend Tito John" },
+  { id: 5, name: "Cousin Maria" },
+  { id: 6, name: "Cousin James" },
+  { id: 7, name: "Neighbor Tita Susan" },
+  { id: 8, name: "Neighbor Tito Peter" },
+  { id: 9, name: "Church Member Ate Linda" },
+  { id: 10, name: "Church Member Tito Frank" },
+  { id: 11, name: "Parent's Friend Tita Rose" },
+  { id: 12, name: "Parent's Friend Tito Tom" },
+  { id: 13, name: "Family Mentor Tita Emily" },
+  { id: 14, name: "Family Mentor Tito Steve" },
+  { id: 15, name: "Community Leader Tita Jane" },
+  { id: 16, name: "Community Leader Tito Bob" },
+  { id: 17, name: "Honored Guest Tita Mary" },
+  { id: 18, name: "Honored Guest Tito Paul" },
 ];
 
 export const faqItems: FAQItem[] = [

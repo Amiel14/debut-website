@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { CountdownTimer } from "@/components/countdown-timer";
-import { RsvpForm } from "@/components/rsvp-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +21,7 @@ interface DebutData {
     treasures: Participant[];
     roses: Participant[];
     candles: Participant[];
+    bills?: Participant[];
   };
   faq: FAQItem[];
   transport: TransportTip[];
@@ -84,9 +84,9 @@ export default function Home() {
             <TraditionsSection 
               treasures={data.traditions.treasures} 
               roses={data.traditions.roses} 
-              candles={data.traditions.candles} 
+              candles={data.traditions.candles}
+              bills={data.traditions.bills || []}
             />
-            <RsvpForm />
             <DirectionsSection tips={data.transport} />
             <FAQSection items={data.faq} />
             <Footer debutanteName={data.event.debutanteName} />
@@ -129,7 +129,7 @@ function HeroSection({ debutanteName, date }: { debutanteName: string; date: str
           <p className="text-lg md:text-xl text-white/90 mt-8">{date}</p>
           <div className="flex items-center justify-center gap-2 mt-4">
             <Sparkles className="w-5 h-5 text-white/80" />
-            <span className="text-sm text-white/70 italic">A night of tradition, love, and celebration</span>
+            <span className="text-sm text-white/70 italic">Eighteen candles, endless memories</span>
             <Sparkles className="w-5 h-5 text-white/80" />
           </div>
         </div>
@@ -312,21 +312,25 @@ function ProgramSection({ program }: { program: ProgramItem[] }) {
 function TraditionsSection({ 
   treasures, 
   roses, 
-  candles 
+  candles,
+  bills
 }: { 
   treasures: Participant[]; 
   roses: Participant[]; 
   candles: Participant[];
+  bills?: Participant[];
 }) {
+  const billsData = bills || [];
+  
   return (
-    <section className="py-16 md:py-20 bg-card" data-testid="traditions-section">
+    <section className="py-20 md:py-24 bg-card" data-testid="traditions-section">
       <div className="container mx-auto px-4">
         <SectionHeading 
           title="Celebrating Traditions" 
-          subtitle="18 Treasures, 18 Roses, 18 Candles" 
+          subtitle="18 Treasures, 18 Roses, 18 Candles, 18 Blue Bills" 
         />
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+        <div className="grid md:grid-cols-2 gap-10 mt-16">
           <TraditionCard 
             title="18 Treasures" 
             icon={<Gift className="w-6 h-6" />}
@@ -345,6 +349,12 @@ function TraditionsSection({
             participants={candles}
             description="18 ladies sharing wishes and wisdom"
           />
+          <TraditionCard 
+            title="18 Blue Bills" 
+            icon={<span className="text-lg font-bold">₱</span>}
+            participants={billsData}
+            description="18 special people presenting monetary gifts"
+          />
         </div>
       </div>
     </section>
@@ -359,9 +369,11 @@ function TraditionCard({
 }: { 
   title: string; 
   icon: React.ReactNode; 
-  participants: Participant[]; 
+  participants: Participant[] | undefined; 
   description: string;
 }) {
+  const participantsList = participants || [];
+
   return (
     <Card className="h-full" data-testid={`card-${title.toLowerCase().replace(/\s/g, '-')}`}>
       <CardHeader className="pb-2">
@@ -377,23 +389,27 @@ function TraditionCard({
       </CardHeader>
       <CardContent>
         <ol className="space-y-2 mt-4">
-          {participants.map((participant, index) => (
-            <li 
-              key={participant.id} 
-              className="flex items-baseline gap-3 text-sm"
-              data-testid={`participant-${title.toLowerCase().replace(/\s/g, '-')}-${index + 1}`}
-            >
-              <span className="font-serif text-primary font-semibold w-6 text-right">
-                {index + 1}.
-              </span>
-              <span className="text-foreground">{participant.name}</span>
-              {participant.role && (
-                <span className="text-muted-foreground text-xs ml-auto">
-                  — {participant.role}
+          {participantsList.length > 0 ? (
+            participantsList.map((participant, index) => (
+              <li 
+                key={participant.id} 
+                className="flex items-baseline gap-3 text-sm"
+                data-testid={`participant-${title.toLowerCase().replace(/\s/g, '-')}-${index + 1}`}
+              >
+                <span className="font-serif text-primary font-semibold w-6 text-right">
+                  {index + 1}.
                 </span>
-              )}
-            </li>
-          ))}
+                <span className="text-foreground">{participant.name}</span>
+                {participant.role && (
+                  <span className="text-muted-foreground text-xs ml-auto">
+                    — {participant.role}
+                  </span>
+                )}
+              </li>
+            ))
+          ) : (
+            <li className="text-sm text-muted-foreground italic">Loading...</li>
+          )}
         </ol>
       </CardContent>
     </Card>

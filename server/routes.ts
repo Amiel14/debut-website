@@ -1,15 +1,13 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { db } from "./db";
-import { rsvps, insertRsvpSchema } from "@shared/schema";
 
 const eventDetails = {
-  debutanteName: "Maria Isabella",
-  eventDate: "2025-12-29",
+  debutanteName: "Brisaise",
+  eventDate: "2025-12-30",
   eventTime: "6:00 PM",
   venueName: "The Grand Ballroom",
-  venueAddress: "123 Celebration Avenue, Makati City, Metro Manila, Philippines 1200",
-  mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.802259253319!2d121.01460657580858!3d14.554729185953898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90264a0ed01%3A0x2b066ed57830cace!2sMakati%20City%2C%20Metro%20Manila%2C%20Philippines!5e0!3m2!1sen!2sus!4v1702000000000!5m2!1sen!2sus",
+  venueAddress: "222 Don Basilio Bautista Blvd, Malabon, 1480 Metro Manila",
+  mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3859.4872354643003!2d120.9431284!3d14.6850165!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b54f44e20321%3A0x1e740390a7ec51c6!2sOCTA%20Events%20Place!5e0!3m2!1sen!2sph!4v1765374660191!5m2!1sen!2sph",
   theme: "An Elegant Evening",
   dressCode: "Formal / Semi-Formal Attire",
   dressCodeDetails: "Ladies are encouraged to wear elegant gowns or cocktail dresses. Gentlemen should wear suits or barong tagalog. You may wear any color of your choice, EXCEPT RED. Red is reserved exclusively for the debutante.",
@@ -76,6 +74,27 @@ const candles = [
   { id: 16, name: "Cousin Isabel" },
   { id: 17, name: "Mentor Teacher Ms. Reyes" },
   { id: 18, name: "Special Friend Olivia" },
+];
+
+const bills = [
+  { id: 1, name: "Aunt Lisa" },
+  { id: 2, name: "Uncle Michael" },
+  { id: 3, name: "Family Friend Tita Grace" },
+  { id: 4, name: "Family Friend Tito John" },
+  { id: 5, name: "Cousin Maria" },
+  { id: 6, name: "Cousin James" },
+  { id: 7, name: "Neighbor Tita Susan" },
+  { id: 8, name: "Neighbor Tito Peter" },
+  { id: 9, name: "Church Member Ate Linda" },
+  { id: 10, name: "Church Member Tito Frank" },
+  { id: 11, name: "Parent's Friend Tita Rose" },
+  { id: 12, name: "Parent's Friend Tito Tom" },
+  { id: 13, name: "Family Mentor Tita Emily" },
+  { id: 14, name: "Family Mentor Tito Steve" },
+  { id: 15, name: "Community Leader Tita Jane" },
+  { id: 16, name: "Community Leader Tito Bob" },
+  { id: 17, name: "Honored Guest Tita Mary" },
+  { id: 18, name: "Honored Guest Tito Paul" },
 ];
 
 const faqItems = [
@@ -158,7 +177,7 @@ export async function registerRoutes(
   });
 
   app.get("/api/traditions", (_req, res) => {
-    res.json({ treasures, roses, candles });
+    res.json({ treasures, roses, candles, bills });
   });
 
   app.get("/api/faq", (_req, res) => {
@@ -176,26 +195,11 @@ export async function registerRoutes(
   app.get("/api/debut-data", (_req, res) => {
     res.json({
       event: eventDetails,
-      traditions: { treasures, roses, candles },
+      traditions: { treasures, roses, candles, bills },
       faq: faqItems,
       transport: transportTips,
       program: programTimeline,
     });
-  });
-
-  app.post("/api/rsvp", async (req, res) => {
-    try {
-      const validatedData = insertRsvpSchema.parse(req.body);
-      const [rsvp] = await db.insert(rsvps).values(validatedData).returning();
-      res.status(201).json({ success: true, rsvp });
-    } catch (error: any) {
-      if (error.name === "ZodError") {
-        res.status(400).json({ error: "Invalid RSVP data", details: error.errors });
-      } else {
-        console.error("RSVP error:", error);
-        res.status(500).json({ error: "Failed to submit RSVP" });
-      }
-    }
   });
 
   return httpServer;

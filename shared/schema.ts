@@ -1,21 +1,4 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-});
-
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
 
 // Event Details Schema
 export const eventDetailsSchema = z.object({
@@ -69,23 +52,17 @@ export const transportTipSchema = z.object({
 
 export type TransportTip = z.infer<typeof transportTipSchema>;
 
-// RSVP Schema
-export const rsvps = pgTable("rsvps", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  guestName: text("guest_name").notNull(),
-  email: text("email").notNull(),
-  attending: text("attending").notNull(),
-  guestCount: integer("guest_count").notNull().default(1),
-  mealPreference: text("meal_preference"),
-  dietaryRestrictions: text("dietary_restrictions"),
-  message: text("message"),
-  createdAt: timestamp("created_at").defaultNow(),
+// RSVP Schema (for form validation only, no database storage)
+export const rsvpFormSchema = z.object({
+  guestName: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  attending: z.enum(["yes", "no", "maybe"], {
+    required_error: "Please let us know if you're attending",
+  }),
+  guestCount: z.number().min(1).max(10).default(1),
+  mealPreference: z.string().optional(),
+  dietaryRestrictions: z.string().optional(),
+  message: z.string().optional(),
 });
 
-export const insertRsvpSchema = createInsertSchema(rsvps).omit({
-  id: true,
-  createdAt: true,
-});
-
-export type InsertRsvp = z.infer<typeof insertRsvpSchema>;
-export type Rsvp = typeof rsvps.$inferSelect;
+export type RsvpFormData = z.infer<typeof rsvpFormSchema>;
